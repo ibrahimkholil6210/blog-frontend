@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import axios from "axios";
+import axios from "../lib/axios";
 import styles from "../styles/Home.module.css";
+import { Button } from "../components/Button";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  
+
   const fetchPosts = async () => {
-    const { data } = await axios.get("/api/blog");
+    const { data } = await axios.get("/posts");
     setPosts(data.posts);
   };
 
@@ -17,7 +17,7 @@ export default function Home() {
     fetchPosts();
   }, []);
 
-  console.log(posts);
+
 
   return (
     <div className={styles.container}>
@@ -39,9 +39,9 @@ export default function Home() {
         </div>
 
         <div className={styles.grid}>
-          {posts?.map(({ post }) => {
+          {posts?.map((post) => {
             return (
-              <Link href="https://nextjs.org/docs" key={post?.id}>
+              <Link href={`/post/${post?.id}`} key={post?.id}>
                 <a className={styles.card}>
                   <h2>{post?.title} &rarr;</h2>
                   <p>{post?.content}</p>
@@ -59,15 +59,4 @@ export default function Home() {
   );
 }
 
-export const Button = ({ href = "", label, type = "button" }) => {
-  const router = useRouter();
-  return (
-    <button
-      className={styles.createBtn}
-      onClick={() => href !== "" && router.push(href)}
-      type={type}
-    >
-      {label}
-    </button>
-  );
-};
+
