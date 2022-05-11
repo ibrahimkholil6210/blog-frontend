@@ -1,0 +1,55 @@
+
+
+.container {
+    padding: 0 2rem;
+}
+
+.main {
+    min-height: 100vh;
+    padding: 4rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    line-height: 1.15;
+    font-size: 4rem;
+}
+
+.inputContainer {
+    margin-top: 2rem;
+}
+
+.inputRow {
+    margin-bottom: 2rem;
+}
+
+.inputRow input {
+    width: 100%;
+    padding: var(--inputPadding);
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.inputRow textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    height: 160px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 1.2rem;
+}
