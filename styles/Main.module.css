@@ -69,3 +69,10 @@
 .minWidth {
   min-width: 550px;
 }
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 0 12px;
+  cursor: pointer;
+}

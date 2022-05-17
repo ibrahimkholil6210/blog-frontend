@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import * as Yup from "yup";
@@ -5,6 +6,8 @@ import { Formik, Form, Field } from "formik";
 import { Button } from "../../../components/Button";
 import mainStyles from "../../../styles/Main.module.css";
 import styles from "../../../styles/Post.module.css";
+import axios from "../../../lib/axios";
+import GetBack from "../../../components/GetBack";
 
 const Post = () => {
   const router = useRouter();
@@ -12,7 +15,21 @@ const Post = () => {
     name: Yup.string().required("Name is required"),
     comment: Yup.string().required("Comment is required"),
   });
-  console.log(router);
+  const [post, setPost] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const fetchPost = async (id) => {
+    setLoading(true);
+    const { data } = await axios.get(`/posts/${id}`);
+    setPost(data?.post);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    console.log(router);
+    if (!router.query.id) return;
+    fetchPost(router.query.id);
+  }, []);
 
   const handleSubmit = (values) => {
     console.log(values);
@@ -27,9 +44,17 @@ const Post = () => {
       </Head>
       <div className={mainStyles.main}>
         <div className={mainStyles.minWidth}>
-          <h1 className={mainStyles.title}>Post</h1>
-          <p>hello</p>
-          <div>
+          <GetBack />
+          {loading ? (
+            <h1 className={mainStyles.title}>Loading...</h1>
+          ) : (
+            <>
+              <h1 className={mainStyles.title}>{post.title}</h1>
+              <p>{post.content}</p>
+            </>
+          )}
+          <div className={styles.commentContainer}>
+            <div className={styles.titleCommentArea}>Add a Comment</div>
             <Formik
               initialValues={{
                 name: "",
@@ -59,7 +84,7 @@ const Post = () => {
                         </div>
                       ) : null}
                     </div>
-                    <Button label="submit" type="submit" />
+                    <Button label="Submit" type="submit" />
                   </Form>
                 );
               }}

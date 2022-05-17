@@ -4,8 +4,8 @@ import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import axios from "../../lib/axios";
 import { Button } from "../../components/Button";
-import styles from "../../styles/Create.module.css";
-import mainStyles from '../../styles/Main.module.css';
+import mainStyles from "../../styles/Main.module.css";
+import GetBack from "../../components/GetBack";
 
 const CreatePost = () => {
   const validationSchemas = Yup.object().shape({
@@ -37,6 +37,7 @@ const CreatePost = () => {
       </Head>
       <main className={mainStyles.main}>
         <div className={mainStyles.minWidth}>
+          <GetBack />
           <h1 className={mainStyles.title}>Create a new post</h1>
           <div className={mainStyles.inputContainer}>
             <Formik
@@ -54,7 +55,9 @@ const CreatePost = () => {
                     <div className={mainStyles.label}>Title</div>
                     <Field name="title" />
                     {errors.title && touched.title ? (
-                      <div className={mainStyles.errorMessage}>{errors.title}</div>
+                      <div className={mainStyles.errorMessage}>
+                        {errors.title}
+                      </div>
                     ) : null}
                   </div>
                   <div className={mainStyles.inputRow}>
@@ -70,7 +73,9 @@ const CreatePost = () => {
                     <div className={mainStyles.label}>Date</div>
                     <Field name="date" type="date" />
                     {errors.date && touched.date ? (
-                      <div className={mainStyles.errorMessage}>{errors.date}</div>
+                      <div className={mainStyles.errorMessage}>
+                        {errors.date}
+                      </div>
                     ) : null}
                   </div>
                   <div className={mainStyles.inputRow}>
