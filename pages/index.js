@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "../lib/axios";
 import styles from "../styles/Home.module.css";
 import { Button } from "../components/Button";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+
+  const postSlice = useSelector((state) => state);
+
+  console.log(postSlice);
 
   const fetchPosts = async () => {
     const { data } = await axios.get("/posts");
