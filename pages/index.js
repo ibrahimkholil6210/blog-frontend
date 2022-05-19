@@ -24,6 +24,7 @@ export default function Home() {
   }, []);
 
   const paginateData = (pageNumber) => {
+    if(currentPage === pageNumber) return
     setCurrentPage(pageNumber);
     dispatch(fetchPostsAsync({ limit, offset: (pageNumber - 1) * limit }));
   };
@@ -59,13 +60,12 @@ export default function Home() {
             );
           })}
         </div>
-        <div>
-          <Pagination
+        <Pagination
             totalData={totalResult}
             listPerPage={limit}
             paginateData={paginateData}
+            className={styles.pagination}
           />
-        </div>
       </main>
 
       <footer className={styles.footer}>
@@ -75,7 +75,7 @@ export default function Home() {
   );
 }
 
-export const Pagination = ({ listPerPage, totalData, paginateData }) => {
+export const Pagination = ({ listPerPage, totalData, paginateData, className }) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalData / listPerPage); i++) {
@@ -83,7 +83,7 @@ export const Pagination = ({ listPerPage, totalData, paginateData }) => {
   }
 
   return (
-    <div className="pagination">
+    <div className={className}>
       {pageNumbers.map((page, index) => (
         <Button key={index} onClick={() => paginateData(page)} label={page} />
       ))}

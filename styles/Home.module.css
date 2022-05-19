@@ -82,7 +82,7 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
+  width: 100%;
 }
 
 .card:hover,
@@ -110,6 +110,11 @@
 
 .btnContainer{
   margin: 0 0 2rem 0;
+}
+
+.pagination{
+  display: flex;
+  gap: 0 15px;
 }
 
 @media (max-width: 600px) {
