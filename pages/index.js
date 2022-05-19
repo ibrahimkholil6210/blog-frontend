@@ -2,27 +2,31 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "../lib/axios";
+import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
 import { Button } from "../components/Button";
+import {
+  selectAllPosts,
+  fetchPostsAsync,
+  selectTotalResult,
+} from "../redux/slice/postSlice";
 
 export default function Home() {
-  const [posts, setPosts] = useState([]);
-
-  const postSlice = useSelector((state) => state);
-
-  console.log(postSlice);
-
-  const fetchPosts = async () => {
-    const { data } = await axios.get("/posts");
-    setPosts(data.posts);
-  };
+  const posts = useSelector(selectAllPosts);
+  const totalResult = useSelector(selectTotalResult);
+  const dispatch = useDispatch();
+  const limit = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter()
 
   useEffect(() => {
-    fetchPosts();
+    dispatch(fetchPostsAsync({ limit, offset: 0 }));
   }, []);
 
-
+  const paginateData = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    dispatch(fetchPostsAsync({ limit, offset: (pageNumber - 1) * limit }));
+  };
 
   return (
     <div className={styles.container}>
@@ -40,13 +44,13 @@ export default function Home() {
         </p>
 
         <div className={styles.btnContainer}>
-          <Button href="/create" label="Create a new post" />
+          <Button onClick={() => router.push('/create')} label="Create a new post" />
         </div>
 
         <div className={styles.grid}>
-          {posts?.map((post) => {
+          {posts?.map((post, id) => {
             return (
-              <Link href={`/post/${post?.id}`} key={post?.id}>
+              <Link href={`/post/${post?.id}`} key={id}>
                 <a className={styles.card}>
                   <h2>{post?.title} &rarr;</h2>
                   <p>{post?.content}</p>
@@ -54,6 +58,13 @@ export default function Home() {
               </Link>
             );
           })}
+        </div>
+        <div>
+          <Pagination
+            totalData={totalResult}
+            listPerPage={limit}
+            paginateData={paginateData}
+          />
         </div>
       </main>
 
@@ -64,4 +75,18 @@ export default function Home() {
   );
 }
 
+export const Pagination = ({ listPerPage, totalData, paginateData }) => {
+  const pageNumbers = [];
 
+  for (let i = 1; i <= Math.ceil(totalData / listPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <div className="pagination">
+      {pageNumbers.map((page, index) => (
+        <Button key={index} onClick={() => paginateData(page)} label={page} />
+      ))}
+    </div>
+  );
+};

@@ -1,12 +1,10 @@
-import { useRouter } from "next/router";
 import mainStyles from '../styles/Main.module.css';
 
-export const Button = ({ href = "", label, type = "button" }) => {
-  const router = useRouter();
+export const Button = ({ onClick, label, type = "button" }) => {
   return (
     <button
       className={mainStyles.createBtn}
-      onClick={() => href !== "" && router.push(href)}
+      onClick={onClick}
       type={type}
     >
       {label}
