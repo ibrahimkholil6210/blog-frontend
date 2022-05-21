@@ -2,10 +2,11 @@ import React from "react";
 import Head from "next/head";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
-import axios from "../../lib/axios";
+import {useDispatch,useSelector} from 'react-redux'
 import { Button } from "../../components/Button";
 import mainStyles from "../../styles/Main.module.css";
 import GetBack from "../../components/GetBack";
+import { createPostAsync, selectLoading } from "../../redux/slice/postSlice";
 
 const CreatePost = () => {
   const validationSchemas = Yup.object().shape({
@@ -14,15 +15,15 @@ const CreatePost = () => {
     date: Yup.date().required("Date is required"),
   });
 
-  const handleSubmit = async (values) => {
+  const loading = useSelector(selectLoading);
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = async (values, ...rest) => {
     try {
       console.log(values);
-      const apiRes = await axios.post("/posts", {
-        title: values.title,
-        content: values.content,
-        date: values.date,
-      });
-      console.log(apiRes);
+      dispatch(createPostAsync(values))
+      rest[0].resetForm();
     } catch (err) {
       console.log(err.message);
     }
@@ -79,7 +80,7 @@ const CreatePost = () => {
                     ) : null}
                   </div>
                   <div className={mainStyles.inputRow}>
-                    <Button type="submit" label="Create" />
+                    <Button type="submit" label={loading ? 'Saving' : 'Save'} disable={loading} />
                   </div>
                 </Form>
               )}
