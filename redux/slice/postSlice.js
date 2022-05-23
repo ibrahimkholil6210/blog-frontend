@@ -35,6 +35,8 @@ export const selectTotalResult = (state) => state.post.results;
 
 export const selectLoading = (state) => state.post.loading;
 
+export const selectPost = (state) => state.post.singlePost;
+
 export const fetchPostsAsync =
   ({ limit, offset }) =>
   async (dispatch) => {
@@ -54,5 +56,25 @@ export const createPostAsync =
     dispatch(setLoading(false));
   };
 
+export const fetchPostAsync = (id) =>
+  async (dispatch) => {
+    dispatch(setLoading(true))
+    const { data } = await axios.get(`/posts/${id}`);
+    dispatch(setPost(data.post));
+    dispatch(setLoading(false));
+  };
+
+export const createCommentAsync =
+  ({ postId, userName, comment, parentId }) =>
+  async (dispatch) => {
+    dispatch(setLoading(true));
+    await axios.post(`/posts/${postId}/comments`, {
+      userName,
+      comment,
+      parentId,
+    });
+    dispatch(setLoading(false));
+    dispatch(fetchPostAsync(postId));
+  };
 
 export default postSlice.reducer;

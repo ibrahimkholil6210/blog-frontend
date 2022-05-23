@@ -11,3 +11,55 @@
     font-size: 1.5rem;
     margin: 2rem 0 1rem 0;
 }
+
+.commentWrapper{
+    margin-top: 2rem;
+    padding: 0 12px;
+}
+
+.singleComment {
+    margin-bottom: 1rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--mainColor);
+}
+
+.commentAvatarConteiner {
+    display: flex;
+    gap: 0 1rem;
+}
+
+.userInfoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    align-self: flex-end;
+}
+
+.userInfoContainer label{
+    font-size: 1rem;
+    display: inline-block;
+    color: var(--mainColor);
+}
+
+.userInfoContainer div{
+    font-size: .7rem;
+}
+
+.singleComment {
+    font-size: .8rem;
+    margin-top: 1rem;
+}
+
+.replyBtn {
+    margin-top: 1rem;
+    font-size: .8rem;
+    color: var(--mainColor);
+    font-weight: 700;
+    cursor: pointer;
+}
