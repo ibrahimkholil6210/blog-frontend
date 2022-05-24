@@ -47,7 +47,7 @@ const Post = () => {
   useEffect(() => {
     if (!router.query.id) return;
     dispatch(fetchPostAsync(router.query.id));
-  }, []);
+  }, [router?.query?.id]);
 
   const handleSubmit = (values, ...rest) => {
     dispatch(
@@ -170,9 +170,8 @@ const Comment = ({ singleComment, handleSubmit, type }) => {
 
   const nestedComment = (singleComment.children || []).map((comment) => {
     return (
-      <div className={styles.nestedComment}>
+      <div className={styles.nestedComment} key={comment.id}>
         <Comment
-          key={comment.id}
           singleComment={comment}
           type="child"
           handleSubmit={handleSubmit}
