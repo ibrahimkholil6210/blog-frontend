@@ -55,7 +55,7 @@ export default function Home() {
                 <a className={styles.card}>
                   <h2>{post?.title} &rarr;</h2>
                   <p>
-                    {`${post?.content.slice(1, 140)} ${
+                    {`${post?.content.slice(0, 140)} ${
                       post?.content.length > 140 ? "..." : ""
                     }`}
                   </p>
