@@ -21,7 +21,6 @@ const CreatePost = () => {
 
   const handleSubmit = async (values, ...rest) => {
     try {
-      console.log(values);
       dispatch(createPostAsync(values))
       rest[0].resetForm();
     } catch (err) {

@@ -13,6 +13,30 @@ import mainStyles from "../../../styles/Main.module.css";
 import styles from "../../../styles/Post.module.css";
 import GetBack from "../../../components/GetBack";
 
+function createTree(inputList) {
+  var list = JSON.parse(JSON.stringify(inputList));
+  var map = {},
+    node,
+    roots = [],
+    i;
+
+  for (i = 0; i < list.length; i += 1) {
+    map[list[i].id] = i; // initialize the map
+    list[i].children = []; // initialize the children
+  }
+
+  for (i = 0; i < list.length; i += 1) {
+    node = list[i];
+    if (node.parentId) {
+      // if you have dangling branches check that map[node.parentId] exists
+      list[map[node.parentId]].children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+  return roots;
+}
+
 const Post = () => {
   const router = useRouter();
 
@@ -26,7 +50,6 @@ const Post = () => {
   }, []);
 
   const handleSubmit = (values, ...rest) => {
-    console.log(values);
     dispatch(
       createCommentAsync({
         postId: router.query.id,
@@ -38,7 +61,12 @@ const Post = () => {
     rest[0].resetForm();
   };
 
-  console.log(post);
+  const [commentTree, setCommentTree] = useState([]);
+
+  useEffect(() => {
+    if (!post?.comments) return;
+    setCommentTree(createTree(post.comments));
+  }, [post]);
 
   return (
     <div className={mainStyles.container}>
@@ -59,7 +87,7 @@ const Post = () => {
             </>
           )}
           <CreateComment handleSubmit={handleSubmit} />
-          <Comments comments={post.comments} handleSubmit={handleSubmit} />
+          <Comments comments={commentTree} handleSubmit={handleSubmit} />
         </div>
       </div>
     </div>
@@ -122,47 +150,73 @@ const CreateComment = ({
 };
 
 const Comments = ({ comments, handleSubmit }) => {
-  const [currentReplyComment, setCurrentReplyComment] = useState(null);
-
   return (
     <div className={styles.commentWrapper}>
       {comments?.map((singleComment, index) => {
         return (
-          <div
-            className={`${styles.commentContainer} ${styles.singleComment}`}
-            key={singleComment?.id || index}
-          >
-            <div className={styles.commentAvatarConteiner}>
-              <div className={styles.avatar}></div>
-              <div className={styles.userInfoContainer}>
-                <label>{singleComment.userName}</label>
-                <div>June 25, 2021 AT 5:45 AM</div>
-              </div>
-            </div>
-            <div className={styles.singleComment}>{singleComment.comment}</div>
-            <div
-              className={styles.replyBtn}
-              onClick={() =>
-                setCurrentReplyComment(
-                  currentReplyComment === singleComment.id
-                    ? null
-                    : singleComment.id
-                )
-              }
-            >
-              {currentReplyComment === singleComment.id ? "Hide" : "Reply"}
-            </div>
-            {currentReplyComment === singleComment.id && (
-              <CreateComment
-                formLabel="Reply to this comment"
-                isReplyForm
-                parentId={singleComment.id}
-                handleSubmit={handleSubmit}
-              />
-            )}
-          </div>
+          <Comment
+            singleComment={singleComment}
+            key={singleComment.id || index}
+            handleSubmit={handleSubmit}
+          />
         );
       })}
     </div>
+  );
+};
+
+const Comment = ({ singleComment, handleSubmit, type }) => {
+  const [currentReplyComment, setCurrentReplyComment] = useState(null);
+
+  const nestedComment = (singleComment.children || []).map((comment) => {
+    return (
+      <div className={styles.nestedComment}>
+        <Comment
+          key={comment.id}
+          singleComment={comment}
+          type="child"
+          handleSubmit={handleSubmit}
+        />
+      </div>
+    );
+  });
+
+  return (
+    <>
+      <div
+        className={`${styles.commentContainer} ${styles.singleComment} ${
+          type === "child" ? styles.deemBg : ""
+        }`}
+      >
+        <div className={styles.commentAvatarConteiner}>
+          <div className={styles.avatar}>{singleComment.userName.slice(0, 1)}</div>
+          <div className={styles.userInfoContainer}>
+            <label>{singleComment.userName}</label>
+            <div>June 25, 2021 AT 5:45 AM</div>
+          </div>
+        </div>
+        <div className={styles.singleComment}>{singleComment.comment}</div>
+        <div
+          className={styles.replyBtn}
+          onClick={() =>
+            setCurrentReplyComment(
+              currentReplyComment === singleComment.id ? null : singleComment.id
+            )
+          }
+        >
+          {currentReplyComment === singleComment.id ? "Hide" : "Reply"}
+        </div>
+        {currentReplyComment === singleComment.id && (
+          <CreateComment
+            formLabel="Reply to this comment"
+            isReplyForm
+            parentId={singleComment.id}
+            handleSubmit={handleSubmit}
+          />
+        )}
+      </div>
+
+      {nestedComment}
+    </>
   );
 };

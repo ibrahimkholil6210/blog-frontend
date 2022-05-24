@@ -26,6 +26,12 @@
     height: 40px;
     border-radius: 50%;
     background-color: var(--mainColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 300;
+    font-size: 2rem;
+    color: #fff;
 }
 
 .commentAvatarConteiner {
@@ -62,4 +68,25 @@
     color: var(--mainColor);
     font-weight: 700;
     cursor: pointer;
+}
+
+.nestedComment{
+    margin-left: 1rem;
+    position: relative;
+}
+
+.nestedComment::after{
+    position: absolute;
+    top: 0px;
+    left: -10px;
+    content: "";
+    width: 2px;
+    height: 100%;
+    background-color: var(--mainColor);
+}
+
+
+
+.deemBg{
+    background-color: rgb(0 112 243 / 10%)
 }

@@ -54,7 +54,11 @@ export default function Home() {
               <Link href={`/post/${post?.id}`} key={id}>
                 <a className={styles.card}>
                   <h2>{post?.title} &rarr;</h2>
-                  <p>{post?.content}</p>
+                  <p>
+                    {`${post?.content.slice(1, 140)} ${
+                      post?.content.length > 140 ? "..." : ""
+                    }`}
+                  </p>
                 </a>
               </Link>
             );
