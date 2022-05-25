@@ -4,6 +4,7 @@ import Head from "next/head";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import { useDispatch, useSelector } from "react-redux";
+import dayjs from "dayjs";
 import {
   fetchPostAsync,
   createCommentAsync,
@@ -180,6 +181,10 @@ const Comment = ({ singleComment, handleSubmit, type }) => {
     );
   }).reverse();
 
+  // Added :PL as placeholder to replace with AT
+  const dayAndTime = dayjs(singleComment?.createdAt).format("MMM DD, YYYY :PL hh:mm A").replace(':PL','AT');
+
+
   return (
     <>
       <div
@@ -191,7 +196,7 @@ const Comment = ({ singleComment, handleSubmit, type }) => {
           <div className={styles.avatar}>{singleComment.userName.slice(0, 1)}</div>
           <div className={styles.userInfoContainer}>
             <label>{singleComment.userName}</label>
-            <div>June 25, 2021 AT 5:45 AM</div>
+            <div>{dayAndTime}</div>
           </div>
         </div>
         <div className={styles.singleComment}>{singleComment.comment}</div>
