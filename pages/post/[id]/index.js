@@ -160,7 +160,7 @@ const Comments = ({ comments, handleSubmit }) => {
             handleSubmit={handleSubmit}
           />
         );
-      })}
+      }).reverse()}
     </div>
   );
 };
@@ -178,7 +178,7 @@ const Comment = ({ singleComment, handleSubmit, type }) => {
         />
       </div>
     );
-  });
+  }).reverse();
 
   return (
     <>
