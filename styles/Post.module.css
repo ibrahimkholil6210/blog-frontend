@@ -85,8 +85,13 @@
     background-color: var(--mainColor);
 }
 
-
-
 .deemBg{
     background-color: rgb(0 112 243 / 10%)
+}
+
+.centerElement{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
 }

@@ -9,22 +9,25 @@ import {
   selectAllPosts,
   fetchPostsAsync,
   selectTotalResult,
+  selectLoading,
 } from "../redux/slice/postSlice";
+import Spinner from "../components/Spinner";
 
 export default function Home() {
   const posts = useSelector(selectAllPosts);
   const totalResult = useSelector(selectTotalResult);
+  const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
   const limit = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(fetchPostsAsync({ limit, offset: 0 }));
   }, []);
 
   const paginateData = (pageNumber) => {
-    if(currentPage === pageNumber) return
+    if (currentPage === pageNumber) return;
     setCurrentPage(pageNumber);
     dispatch(fetchPostsAsync({ limit, offset: (pageNumber - 1) * limit }));
   };
@@ -45,31 +48,40 @@ export default function Home() {
         </p>
 
         <div className={styles.btnContainer}>
-          <Button onClick={() => router.push('/create')} label="Create a new post" />
+          <Button
+            onClick={() => router.push("/create")}
+            label="Create a new post"
+          />
         </div>
 
-        <div className={styles.grid}>
-          {posts?.map((post, id) => {
-            return (
-              <Link href={`/post/${post?.id}`} key={id}>
-                <a className={styles.card}>
-                  <h2>{post?.title} &rarr;</h2>
-                  <p>
-                    {`${post?.content.slice(0, 140)} ${
-                      post?.content.length > 140 ? "..." : ""
-                    }`}
-                  </p>
-                </a>
-              </Link>
-            );
-          })}
-        </div>
-        <Pagination
-            totalData={totalResult}
-            listPerPage={limit}
-            paginateData={paginateData}
-            className={styles.pagination}
-          />
+        {loading && <Spinner />}
+
+        {!loading && (
+          <>
+            <div className={styles.grid}>
+              {posts?.map((post, id) => {
+                return (
+                  <Link href={`/post/${post?.id}`} key={id}>
+                    <a className={styles.card}>
+                      <h2>{post?.title} &rarr;</h2>
+                      <p>
+                        {`${post?.content.slice(0, 140)} ${
+                          post?.content.length > 140 ? "..." : ""
+                        }`}
+                      </p>
+                    </a>
+                  </Link>
+                );
+              })}
+            </div>
+            <Pagination
+              totalData={totalResult}
+              listPerPage={limit}
+              paginateData={paginateData}
+              className={styles.pagination}
+            />
+          </>
+        )}
       </main>
 
       <footer className={styles.footer}>

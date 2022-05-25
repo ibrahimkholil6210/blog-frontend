@@ -8,28 +8,29 @@ import dayjs from "dayjs";
 import {
   fetchPostAsync,
   createCommentAsync,
+  selectLoading
 } from "../../../redux/slice/postSlice";
 import { Button } from "../../../components/Button";
 import mainStyles from "../../../styles/Main.module.css";
 import styles from "../../../styles/Post.module.css";
 import GetBack from "../../../components/GetBack";
+import Spinner from "../../../components/Spinner";
 
 function createTree(inputList) {
-  var list = JSON.parse(JSON.stringify(inputList));
-  var map = {},
+  let list = JSON.parse(JSON.stringify(inputList));
+  let map = {},
     node,
     roots = [],
     i;
 
   for (i = 0; i < list.length; i += 1) {
-    map[list[i].id] = i; // initialize the map
-    list[i].children = []; // initialize the children
+    map[list[i].id] = i; 
+    list[i].children = []; 
   }
 
   for (i = 0; i < list.length; i += 1) {
     node = list[i];
     if (node.parentId) {
-      // if you have dangling branches check that map[node.parentId] exists
       list[map[node.parentId]].children.push(node);
     } else {
       roots.push(node);
@@ -42,7 +43,7 @@ const Post = () => {
   const router = useRouter();
 
   const post = useSelector((state) => state.post.singlePost);
-  const loading = useSelector((state) => state.loading);
+  const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,6 +70,8 @@ const Post = () => {
     setCommentTree(createTree(post.comments));
   }, [post]);
 
+  console.log(loading)
+
   return (
     <div className={mainStyles.container}>
       <Head>
@@ -80,7 +83,7 @@ const Post = () => {
         <div className={mainStyles.minWidth}>
           <GetBack />
           {loading ? (
-            <h1 className={mainStyles.title}>Loading...</h1>
+            <div className={styles.centerElement}><Spinner/></div>
           ) : (
             <>
               <h1 className={mainStyles.title}>{post.title}</h1>

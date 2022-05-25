@@ -40,8 +40,10 @@ export const selectPost = (state) => state.post.singlePost;
 export const fetchPostsAsync =
   ({ limit, offset }) =>
   async (dispatch) => {
+    dispatch(setLoading(true));
     const { data } = await axios.get(`/posts?limit=${limit}&offset=${offset}`);
     dispatch(setPosts(data));
+    dispatch(setLoading(false));
   };
 
 export const createPostAsync =
@@ -58,6 +60,7 @@ export const createPostAsync =
 
 export const fetchPostAsync = (id) =>
   async (dispatch) => {
+    dispatch(setPost({}))
     dispatch(setLoading(true))
     const { data } = await axios.get(`/posts/${id}`);
     dispatch(setPost(data.post));
