@@ -70,13 +70,11 @@ export const fetchPostAsync = (id) =>
 export const createCommentAsync =
   ({ postId, userName, comment, parentId }) =>
   async (dispatch) => {
-    dispatch(setLoading(true));
     await axios.post(`/posts/${postId}/comments`, {
       userName,
       comment,
       parentId,
     });
-    dispatch(setLoading(false));
     dispatch(fetchPostAsync(postId));
   };
 

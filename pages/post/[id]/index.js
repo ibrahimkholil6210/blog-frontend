@@ -70,7 +70,6 @@ const Post = () => {
     setCommentTree(createTree(post.comments));
   }, [post]);
 
-  console.log(loading)
 
   return (
     <div className={mainStyles.container}>
