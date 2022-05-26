@@ -58,10 +58,13 @@ export const createPostAsync =
     dispatch(setLoading(false));
   };
 
-export const fetchPostAsync = (id) =>
+export const fetchPostAsync =
+  (id, loadingRequired = true) =>
   async (dispatch) => {
-    dispatch(setPost({}))
-    dispatch(setLoading(true))
+    if (loadingRequired) {
+      dispatch(setPost({}));
+      dispatch(setLoading(true));
+    }
     const { data } = await axios.get(`/posts/${id}`);
     dispatch(setPost(data.post));
     dispatch(setLoading(false));
@@ -75,7 +78,7 @@ export const createCommentAsync =
       comment,
       parentId,
     });
-    dispatch(fetchPostAsync(postId));
+    dispatch(fetchPostAsync(postId, false));
   };
 
 export default postSlice.reducer;
